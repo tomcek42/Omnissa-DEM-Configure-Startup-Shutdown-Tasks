@@ -47,18 +47,6 @@ release:
 irm https://github.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/releases/latest/download/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
 ```
 
-To pin a specific version instead, name the tag:
-
-```powershell
-irm https://github.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/releases/download/v1.0.0/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
-```
-
-To run the current development state of the default branch:
-
-```powershell
-irm https://raw.githubusercontent.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/main/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
-```
-
 ### Local file
 
 ```powershell
