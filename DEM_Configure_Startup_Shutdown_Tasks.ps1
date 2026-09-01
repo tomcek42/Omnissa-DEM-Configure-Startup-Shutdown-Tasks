@@ -11,6 +11,9 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
     throw 'This script must be run from an elevated PowerShell session (Run as Administrator).'
 }
 
+# Abort on the first failure instead of reporting success at the end.
+$ErrorActionPreference = 'Stop'
+
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "Configuring Local Policy for Omnissa DEM Startup/Shutdown Tasks" -ForegroundColor Cyan
 Write-Host "============================================================`n" -ForegroundColor Cyan
@@ -18,6 +21,15 @@ Write-Host "============================================================`n" -For
 # --- Install PolicyFileEditor Module if not present ---
 if (-not (Get-Module -ListAvailable -Name PolicyFileEditor)) {
     Write-Host "PolicyFileEditor module not found. Installing..." -ForegroundColor Yellow
+
+    # A freshly deployed image usually has neither TLS 1.2 as default nor the NuGet
+    # provider, which makes Install-Module fail or prompt. Both are set up here so the
+    # script can run unattended.
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    if (-not (Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue)) {
+        Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null
+    }
+
     Install-Module -Name PolicyFileEditor -Force -Scope CurrentUser
     Write-Host "  [OK] PolicyFileEditor module installed.`n" -ForegroundColor Green
 } else {
@@ -59,6 +71,12 @@ Write-Host "  [OK] Disabled 'Run startup scripts asynchronously'" -ForegroundCol
 Write-Host "`nConfiguring Startup/Shutdown scripts..." -ForegroundColor Cyan
 
 $flexEnginePath = "C:\Program Files\Omnissa\DEM\FlexEngine.exe"
+
+# The policy is written either way (DEM may be installed later in the image build),
+# but a missing FlexEngine.exe is almost always a mistake worth pointing out.
+if (-not (Test-Path -LiteralPath $flexEnginePath)) {
+    Write-Warning "FlexEngine.exe not found at '$flexEnginePath'. The policy will be written anyway - verify the path and that DEM is installed."
+}
 
 # --- Registry: Startup Script ---
 $startupPaths = @(
@@ -150,6 +168,9 @@ foreach ($valueName in $staleValues) {
 # --- Force Group Policy Update ---
 Write-Host "`nForcing Group Policy update..." -ForegroundColor Yellow
 gpupdate /force
+if ($LASTEXITCODE -ne 0) {
+    Write-Warning "gpupdate returned exit code $LASTEXITCODE. The settings were written, but review the output above."
+}
 
 Write-Host "`n============================================================" -ForegroundColor Cyan
 Write-Host "Configuration complete!" -ForegroundColor Green
