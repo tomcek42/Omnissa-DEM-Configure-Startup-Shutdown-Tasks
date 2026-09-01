@@ -4,12 +4,18 @@ PowerShell script that configures the **Local Group Policy** of a Windows machin
 Omnissa DEM (Dynamic Environment Manager) executes its *Computer Environment*
 Startup and Shutdown Tasks.
 
+It automates exactly the manual procedure described in the official Omnissa
+documentation, [*Windows Configuration for Computer Environment Startup and Shutdown
+Tasks*](https://docs.omnissa.com/bundle/DEMInstallConfigGuideV2603/page/WindowsConfigurationforComputerEnvironmentStartupandShutdownTasks.html) — no deviations, no extra settings.
+
 Doing this by hand means clicking through `gpedit.msc` on every machine (or every golden
 image). This script writes the same settings directly to `Registry.pol`, the Group Policy
 registry hive and `scripts.ini`, so it can be run unattended — for example during image
 creation or via a deployment tool.
 
 ## What it does
+
+These are the steps from the Omnissa guide linked above, applied automatically:
 
 1. **Disables** `Computer Configuration > Administrative Templates > System > Scripts >
    Run startup scripts asynchronously` — startup scripts then run **synchronously**, which
@@ -79,6 +85,10 @@ Open `gpedit.msc` and check:
 - `Computer Configuration > Windows Settings > Scripts (Startup/Shutdown)`
   → Startup: `FlexEngine.exe -StartupTasks`
   → Shutdown: `FlexEngine.exe -ShutdownTasks`
+
+## Reference
+
+- Omnissa: [Windows Configuration for Computer Environment Startup and Shutdown Tasks](https://docs.omnissa.com/bundle/DEMInstallConfigGuideV2603/page/WindowsConfigurationforComputerEnvironmentStartupandShutdownTasks.html)
 
 ## Notes
 
