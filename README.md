@@ -34,16 +34,23 @@ creation or via a deployment tool.
 
 ### One-liner
 
-Run this in an **elevated** PowerShell session:
+Run this in an **elevated** PowerShell session. It always pulls the newest published
+release:
+
+```powershell
+irm https://github.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/releases/latest/download/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
+```
+
+To pin a specific version instead, name the tag:
+
+```powershell
+irm https://github.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/releases/download/v1.0.0/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
+```
+
+To run the current development state of the default branch:
 
 ```powershell
 irm https://raw.githubusercontent.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/main/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
-```
-
-To pin a released version instead of `main`, replace the branch with a tag:
-
-```powershell
-irm https://raw.githubusercontent.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/v1.0.0/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
 ```
 
 ### Local file
