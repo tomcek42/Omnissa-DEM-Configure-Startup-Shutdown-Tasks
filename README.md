@@ -1,4 +1,4 @@
-# DEM Configure Startup/Shutdown Tasks
+# Omnissa DEM - Configure Startup/Shutdown Tasks
 
 PowerShell script that configures the **Local Group Policy** of a Windows machine so that
 Omnissa DEM (Dynamic Environment Manager) executes its *Computer Environment*
@@ -31,6 +31,22 @@ creation or via a deployment tool.
   module — installed automatically from the PowerShell Gallery if missing
 
 ## Usage
+
+### One-liner
+
+Run this in an **elevated** PowerShell session:
+
+```powershell
+irm https://raw.githubusercontent.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/main/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
+```
+
+To pin a released version instead of `main`, replace the branch with a tag:
+
+```powershell
+irm https://raw.githubusercontent.com/tomcek42/Omnissa-DEM-Configure-Startup-Shutdown-Tasks/v1.0.0/DEM_Configure_Startup_Shutdown_Tasks.ps1 | iex
+```
+
+### Local file
 
 ```powershell
 # Run in an elevated PowerShell session

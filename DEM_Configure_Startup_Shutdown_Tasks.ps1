@@ -1,8 +1,15 @@
-# ============================================================
+﻿# ============================================================
 # PowerShell Script to configure Local Policy for
 # Omnissa DEM Computer Environment Startup/Shutdown Tasks
 # ============================================================
 #Requires -RunAsAdministrator
+
+# Explicit elevation check: #Requires is ignored when the script is piped into
+# Invoke-Expression (the 'irm ... | iex' one-liner), so verify it ourselves.
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    throw 'This script must be run from an elevated PowerShell session (Run as Administrator).'
+}
 
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "Configuring Local Policy for Omnissa DEM Startup/Shutdown Tasks" -ForegroundColor Cyan
