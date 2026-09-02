@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # PowerShell Script to configure Local Policy for
 # Omnissa DEM Computer Environment Startup/Shutdown Tasks
 # ============================================================
@@ -13,6 +13,15 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
 
 # Abort on the first failure instead of reporting success at the end.
 $ErrorActionPreference = 'Stop'
+
+# A fresh Windows image defaults to the Restricted execution policy, which blocks
+# importing PolicyFileEditor. Relax it for this process only - nothing about the
+# image is changed permanently.
+try {
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
+} catch {
+    Write-Warning "Could not set the process execution policy: $($_.Exception.Message)"
+}
 
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "Configuring Local Policy for Omnissa DEM Startup/Shutdown Tasks" -ForegroundColor Cyan
